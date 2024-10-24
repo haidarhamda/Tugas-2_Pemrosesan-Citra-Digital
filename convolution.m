@@ -10,7 +10,7 @@ function [h]=convolution(f,g)
         imgChannel = paddedf(:,:,channel);
         % imshow(imgChannel)
         tmpChannel=zeros(n,m);
-        disp(channel);
+        % disp(channel);
         for i=2:n
             for j=2:m
                 tmp=double(imgChannel(i:i+x-1,j:j+y-1));
@@ -22,10 +22,10 @@ function [h]=convolution(f,g)
     
 end
 
-img = imread("img\shore.jpg");
-g=[-1 -1 -1; -1 8 -1; -1 -1 -1];
-h=(convolution(im2double(img),g));
-
-imshow(h)
+% img = imread("img\shore.jpg");
+% g=[-1 -1 -1; -1 8 -1; -1 -1 -1];
+% h=(convolution(im2double(img),g));
+% 
+% imshow(h)
 % hm=uint8(conv2(im2double(img), double(g)));
 % figure,imshow(hm)
