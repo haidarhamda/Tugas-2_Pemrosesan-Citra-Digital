@@ -3,17 +3,17 @@ classdef filter
         function g=mean(f)
             [n,m,c]=size(f);
             h=ones(3,3)*(1/9);
-            g=convolution(f,double(h));
+            g=uint8(convolution(double(f),double(h)));
         end
 
         function g=gauss(f,sigma)
             % g=imgaussfilt(f,sigma);
             % filter_size=7;
             % disp(double(fspecial("gaussian",[filter_size,filter_size],sigma)));
-            g=convolution(f,double(fspecial("gaussian",[sigma,sigma],sigma)));
+            g=uint8(convolution(double(f),double(fspecial("gaussian",[sigma,sigma],sigma))));
         end
 
-        function g=ilpf(f)
+        function g=ilpf(f,d0)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -22,7 +22,7 @@ classdef filter
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 % imshow(fp);
                 F=fftshift(fft2(fp));
-                D0 = 40;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -40,7 +40,7 @@ classdef filter
             end
         end
 
-        function g=glpf(f)
+        function g=glpf(f,d0)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -48,7 +48,7 @@ classdef filter
             for channel=1:c
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 F=fftshift(fft2(fp));
-                D0 = 50;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -67,7 +67,7 @@ classdef filter
             end
         end
 
-        function g=blpf(f)
+        function g=blpf(f,d0,N2)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -75,7 +75,7 @@ classdef filter
             for channel=1:c
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 F=fftshift(fft2(fp));
-                D0 = 50;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -84,7 +84,7 @@ classdef filter
                 v(idy) = v(idy) - Q;
                 [V, U] = meshgrid(v, u); 
                 D = sqrt(U.^2 + V.^2); 
-                N = 2;
+                N = N2;
                 H = 1./(1 + (D./D0).^(2*N)); 
                 H = fftshift(H); 
                 % figure;imshow(H);
@@ -98,7 +98,7 @@ classdef filter
             end
         end
 
-        function g=ihpf(f)
+        function g=ihpf(f,d0)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -107,7 +107,7 @@ classdef filter
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 % imshow(fp);
                 F=fftshift(fft2(fp));
-                D0 = 40;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -127,7 +127,7 @@ classdef filter
             end
         end
 
-        function g=ghpf(f)
+        function g=ghpf(f,d0)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -135,7 +135,7 @@ classdef filter
             for channel=1:c
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 F=fftshift(fft2(fp));
-                D0 = 50;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -155,7 +155,7 @@ classdef filter
             end
         end
 
-        function g=bhpf(f)
+        function g=bhpf(f,d0,N2)
             [n,m,c]=size(f);
             P=2*n;
             Q=2*m;
@@ -163,7 +163,7 @@ classdef filter
             for channel=1:c
                 fp=padarray(im2double(f(:,:,channel)),[n,m],'post');
                 F=fftshift(fft2(fp));
-                D0 = 50;
+                D0 = d0;
                 u = 0:(P-1); 
                 v = 0:(Q-1);
                 idx = find(u > P/2); 
@@ -172,7 +172,7 @@ classdef filter
                 v(idy) = v(idy) - Q;
                 [V, U] = meshgrid(v, u); 
                 D = sqrt(U.^2 + V.^2); 
-                N = 2;
+                N = N2;
                 H = 1./(1 + (D./D0).^(2*N)); 
                 H = 1-H;
                 H = fftshift(H); 
