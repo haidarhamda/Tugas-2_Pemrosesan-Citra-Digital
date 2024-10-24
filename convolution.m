@@ -1,12 +1,18 @@
 function [h]=convolution(f,g)
     [n, m, c] = size(f);
+    [x,y]=size(g);
     h=zeros(n,m,c);
+    padx=floor(x/2);
+    pady=floor(y/2);
+    paddedf=padarray(f,[padx,pady],'replicate');
+
     for channel=1:c
-        imgChannel = f(:,:,channel);
+        imgChannel = paddedf(:,:,channel);
         imshow(imgChannel)
         for i=2:n-1
             for j=2:m-1
-                h(i,j)= imgChannel(i-1,j-1)*g(1,1)+imgChannel(i-1,j)*g(1,2)+imgChannel(i-1,j+1)*g(1,3)+imgChannel(i,j-1)*g(2,1)+imgChannel(i,j)*g(2,2)+imgChannel(i,j+1)*g(2,3)+imgChannel(i+1,j-1)*g(3,1)+imgChannel(i+1,j)*g(3,2)+imgChannel(i+1,j+1)*g(3,3);
+                tmp=imgChannel(i:i+x-1,j:j+y-1);
+                h(i,j)=sum(sum(tmp.*g));
             end
         end
     end
