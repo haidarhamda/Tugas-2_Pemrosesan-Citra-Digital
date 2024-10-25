@@ -17,7 +17,6 @@ function [h]=convolution(f,g)
         end
         h(:,:,channel)=tmpChannel;
     end
-    
 end
 
 % img = imread("img\shore.jpg");

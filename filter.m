@@ -7,9 +7,6 @@ classdef filter
         end
 
         function g=gauss(f,sigma)
-            % g=imgaussfilt(f,sigma);
-            % filter_size=7;
-            % disp(double(fspecial("gaussian",[filter_size,filter_size],sigma)));
             if(sigma<=0)
                 sigma=1;
             end
