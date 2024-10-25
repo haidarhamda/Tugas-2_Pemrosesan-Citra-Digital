@@ -2,7 +2,7 @@ classdef filter
     methods(Static)
         function g=mean(f)
             [n,m,c]=size(f);
-            h=ones(3,3)*(1/9);
+            h=double(ones(3,3))*(1/9);
             g=uint8(convolution(double(f),double(h)));
         end
 
@@ -10,6 +10,9 @@ classdef filter
             % g=imgaussfilt(f,sigma);
             % filter_size=7;
             % disp(double(fspecial("gaussian",[filter_size,filter_size],sigma)));
+            if(sigma<=0)
+                sigma=1;
+            end
             g=uint8(convolution(double(f),double(fspecial("gaussian",[sigma,sigma],sigma))));
         end
 
