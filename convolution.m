@@ -9,19 +9,20 @@ function [h]=convolution(f,g)
     for channel=1:c
         imgChannel = paddedf(:,:,channel);
         tmpChannel=double(zeros(n,m));
-        for i=2:n
-            for j=2:m
-                tmp=double(imgChannel(i:i+x-1,j:j+y-1));
-                tmpChannel(i,j)=sum(sum(tmp.*double(g)));
+        for i=1+padx:n-padx
+            for j=1+pady:m-pady
+                tmp=double(imgChannel(i:i+x-padx,j:j+y-pady));
+                tmpChannel(i+padx,j+pady)=sum(sum(tmp.*double(g)));
             end
         end
         h(:,:,channel)=tmpChannel;
     end
 end
 
-% img = imread("img\shore.jpg");
+% img = imread("img\camera.bmp");
 % g=[-1 -1 -1; -1 8 -1; -1 -1 -1];
-% h=(convolution(im2double(img),g));
+% h=(coonvolution(im2double(img),g));
+% % disp(h)
 % imshow(h)
 % hm=uint8(conv2(im2double(img), double(g)));
 % figure,imshow(hm)
