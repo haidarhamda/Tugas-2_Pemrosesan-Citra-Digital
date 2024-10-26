@@ -1,5 +1,5 @@
-function [noise, result]=periodicNoiseRemoval(img, rotation, frequency)  
-    noise = insertNoise(img, rotation, frequency);
+function [noise, result]=periodicNoiseRemoval(img, rotation, frequency, process2dims)  
+    noise = insertNoise(img, rotation, frequency, process2dims);
     
     [x, y, z] = size(img);
     notch_filter = ones(x, y);
@@ -27,10 +27,16 @@ function [noise, result]=periodicNoiseRemoval(img, rotation, frequency)
     end
 end
 
-function noise=insertNoise(img, rotation, frequency)
+function noise=insertNoise(img, rotation, frequency, process2dims)
     [x, y, z] = size(img);
-    a =  meshgrid(1:x);
-    n = 0.2 * sin(deg2rad(rotation) * frequency * a / y);
+
+    if process2dims
+        [a, b] =  meshgrid(1:x, 1:y);
+        n = 0.2 * sin(deg2rad(rotation) * frequency * a / y) + 0.2 * sin(deg2rad(rotation) * frequency * b / x);
+    else
+        a = meshgrid(1:x, 1:y);
+        n = 0.2 * sin(deg2rad(rotation) * frequency * a / y);
+    end
 
     noise = img;
     for c = 1:z
