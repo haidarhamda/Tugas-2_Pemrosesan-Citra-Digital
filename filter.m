@@ -191,7 +191,7 @@ classdef filter
             filter_size = 3;
             pad = floor(filter_size / 2);
 
-            padded = padarray(img, [pad, pad], 0, 'both');
+            padded = padarray(img, [pad, pad], 1, 'both');
             [x, y, z] = size(img);
             result = zeros(size(img));
 
@@ -209,7 +209,7 @@ classdef filter
                             case 'mean'
                                 value = mean(neighborhood_pixels(:));
                             case 'geometric'
-                                value = exp(mean(log(neighborhood_pixels(:))));
+                                value = exp(mean(log(neighborhood_pixels(:)) + 1e-6));
                             case 'harmonic'
                                 value = filter_size^2 / sum(1 ./ neighborhood_pixels(:));
                             case 'contraharmonic'
