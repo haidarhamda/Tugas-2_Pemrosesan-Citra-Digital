@@ -1,7 +1,5 @@
-function [noise, result]=periodicNoiseRemoval(filename)
-    img = imread(filename);
-    
-    noise = insertNoise(img);
+function [noise, result]=periodicNoiseRemoval(img, rotation, frequency)  
+    noise = insertNoise(img, rotation, frequency);
     
     [x, y, z] = size(img);
     notch_filter = ones(x, y);
@@ -25,17 +23,14 @@ function [noise, result]=periodicNoiseRemoval(filename)
 
         filtered_fft = ifftshift(filtered_fftshift);
         filtered = ifft2(filtered_fft);
-        result(:, :, c) = real(filtered) / 255;
+        result(:, :, c) = real(filtered);
     end
 end
 
-function noise=insertNoise(img)
-    img = im2double(img);
-
+function noise=insertNoise(img, rotation, frequency)
     [x, y, z] = size(img);
     a =  meshgrid(1:x);
-    frequency = 15;
-    n = 0.2 * sin(2 * pi * frequency * a / y);
+    n = 0.2 * sin(deg2rad(rotation) * frequency * a / y);
 
     noise = img;
     for c = 1:z
