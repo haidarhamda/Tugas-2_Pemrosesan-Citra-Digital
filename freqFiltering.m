@@ -1,6 +1,4 @@
-function bright=freqFiltering(filename, factor)
-    img = imread(filename);
-
+function bright=freqFiltering(img, factor)
     img_fft = fftn(img, size(img));
     img_fftshift = fftshift(img_fft);
     
