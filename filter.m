@@ -186,5 +186,44 @@ classdef filter
                 g(:,:,channel) = G2(1:n, 1:m);
             end
         end
+
+        function result=noise_filter(img, method, Q, alpha)
+            filter_size = 3;
+            pad = floor(filter_size / 2);
+
+            padded = padarray(img, [pad, pad], 0, 'both');
+            [x, y, z] = size(img);
+            result = zeros(size(img));
+
+            for i = 1:x
+                for j = 1:y
+                    for k = 1:z
+                        neighborhood_pixels = padded(i:i+filter_size-1, j:j+filter_size-1, k);
+                        switch method
+                            case 'min'
+                                value = min(neighborhood_pixels(:));
+                            case 'max'
+                                value = max(neighborhood_pixels(:));
+                            case 'median'
+                                value = median(neighborhood_pixels(:));
+                            case 'mean'
+                                value = mean(neighborhood_pixels(:));
+                            case 'geometric'
+                                value = exp(mean(log(neighborhood_pixels(:))));
+                            case 'harmonic'
+                                value = filter_size^2 / sum(1 ./ neighborhood_pixels(:));
+                            case 'contraharmonic'
+                                value = sum(neighborhood_pixels(:).^(Q+1)) / sum(neighborhood_pixels(:).^Q);
+                            case 'midpoint'
+                                value = (max(neighborhood_pixels(:)) + min(neighborhood_pixels(:))) / 2;
+                            case 'alpha-trimmed'
+                                sorted = sort(neighborhood_pixels(:));
+                                value = mean(sorted(alpha+1:end-alpha));
+                        end
+                        result(i, j, k) = value;
+                    end
+                end
+            end
+        end
     end
 end
