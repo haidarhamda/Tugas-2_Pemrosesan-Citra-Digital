@@ -1,4 +1,10 @@
 function [blurred, result]=wienerFilter(img, length, theta, nsr)
+    if length == 0
+        blurred = img;
+        result = img;
+        return;
+    end
+
     [blurred, kernel] = motionBlur(img, length, theta, nsr);
 
     [x, y, z] = size(img);
